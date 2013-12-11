@@ -226,8 +226,8 @@ function template_body_above()
 		if ($context['allow_search'])
 		{
 		echo '
-			<div class="element place-right">
-			<form id="search_form" class="floatright" action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '">
+			<div class="element input-element place-right">
+			<form id="search_form" action="', $scripturl, '?action=search2" method="post" accept-charset="', $context['character_set'], '">
 				<input type="text" name="search" value="" class="input_text" />&nbsp;';
 
 		// Using the quick search dropdown?
@@ -267,7 +267,18 @@ function template_body_above()
 				<input type="hidden" name="advanced" value="0" />
 			</form>
 		</div>';
-	}			
+	}	
+
+	// Unread things? now I love you button
+	if ($context['user']['is_logged'])
+	echo '
+						<div class="element">
+							<a href="', $scripturl, '?action=unread" title="', $txt['unread_since_visit'], '">', $txt['view_unread_category'], '</a>
+						</div>
+						<div class="element">
+							<a href="', $scripturl, '?action=unreadreplies" title="', $txt['show_unread_replies'], '">', $txt['unread_replies'], '</a>
+						</div>';
+						
 	echo '		
 		</nav>
 	</nav>';
@@ -414,13 +425,6 @@ function theme_linktree($force_show = false)
 	echo '
 				<div class="navigate_section">
 					<ul>';
-
-	if ($context['user']['is_logged'])
-	echo '
-						<li class="unread_links">
-							<a href="', $scripturl, '?action=unread" title="', $txt['unread_since_visit'], '">', $txt['view_unread_category'], '</a>
-							<a href="', $scripturl, '?action=unreadreplies" title="', $txt['show_unread_replies'], '">', $txt['unread_replies'], '</a>
-						</li>';
 
 	// Each tree item has a URL and name. Some may have extra_before and extra_after.
 	foreach ($context['linktree'] as $link_num => $tree)
