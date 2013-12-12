@@ -1,51 +1,5 @@
 /* Styles for the general looks for the Curve2 theme.
 ----------------------------------------------------- */
-
-/* Normal, standard links. */
-a:link, a:visited {
-	color: #346;
-	text-decoration: none;
-}
-a:hover {
-	text-decoration: underline;
-	cursor: pointer;
-}
-
-/* Links that open in a new window. */
-a.new_win:link, a.new_win:visited {
-	color: #346;
-	text-decoration: none;
-}
-a.new_win:hover {
-	text-decoration: underline;
-}
-
-html {
-	background: #3e5a78;
-}
-/* Set a font-size that will look the same in all browsers. */
-body {
-	background: #e9eef2;
-	/* Start with the best Vista/W7 font, then go to best Mac and Linux, then the old fallbacks.........*/
-	/* Font size is specifically chosen to be exactly 10 point. There are sound reasons for this (hinting, ClearType, etc). */
-	font: 83.33%/150% "Segoe UI", "Helvetica Neue", "Liberation Sans", "Nimbus Sans L", Arial, sans-serif;
-	/* Use dark grey for the text. Pure black (#000) is not as good: http://informationarchitects.net/blog/100e2r/
-	/* Quote: "for screen design, an overly strong contrast is not ideal either, as the text starts to flicker. Benchmark: #333 on #fff"
-	/*	#333 on #fff is the standard, but we aren't always on #fff so use #222 for standard weight. */
-	color: #222;
-	margin: 0 auto;
-	padding: 0;
-	position: relative;
-	float: left;
-	width: 100%;
-}
-
-/* Help popups require a different styling of the body element. */
-/* Deprecated? */
-body#help_popup {
-	padding: 12px;
-}
-
 ul#likes li {
 	clear: both;
 }
@@ -4311,6 +4265,7 @@ div#manage_boards dl dd textarea[name=desc] {
 
 .full_width {
 	width: 100%;
+	float: left;
 }
 .tile:hover {
 	text-decoration: none;

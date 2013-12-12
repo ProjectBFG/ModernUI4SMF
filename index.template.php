@@ -181,7 +181,7 @@ function template_body_above()
 
 	// Wrapper div now echoes permanently for better layout options. h1 a is now target for "Go up" links.
 	echo '
-	<nav class="navigation-bar">
+	<nav class="navigation-bar dark">
 		<nav class="navigation-bar-content">';
 	
 	// If the user is logged in, display some things that might be useful.
@@ -470,13 +470,13 @@ function template_menu()
 	global $context, $settings, $options, $scripturl, $txt;
 
 	echo '
-				<nav class="horizontal-menu compact">';
+				<nav class="horizontal-menu compact">
+					<ul>';
 
 	// Note: Menu markup has been cleaned up to remove unnecessary spans and classes.
 	foreach ($context['menu_buttons'] as $act => $button)
 	{
 		echo '
-					<ul>
 						<li id="button_', $act, '"', !empty($button['sub_buttons']) ? ' class="subsections"' :'', '>
 							<a', $button['active_button'] ? ' class="active"' : '', ' href="', $button['href'], '"', isset($button['target']) ? ' target="' . $button['target'] . '"' : '', '>
 								', $button['title'], '
@@ -484,7 +484,7 @@ function template_menu()
 		if (!empty($button['sub_buttons']))
 		{
 			echo '
-							<ul>';
+							<ul class="dropdown-menu">';
 
 			foreach ($button['sub_buttons'] as $childbutton)
 			{
@@ -497,7 +497,7 @@ function template_menu()
 				if (!empty($childbutton['sub_buttons']))
 				{
 					echo '
-									<ul>';
+									<ul class="dropdown-menu">';
 
 					foreach ($childbutton['sub_buttons'] as $grandchildbutton)
 						echo '
@@ -518,12 +518,11 @@ function template_menu()
 							</ul>';
 		}
 		echo '
-						</li>
-					</ul>';
+						</li>';
 	}
 
 	echo '
-					
+					</ul>
 				</nav>';
 }
 

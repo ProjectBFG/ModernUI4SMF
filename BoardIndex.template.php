@@ -138,19 +138,22 @@ function template_info_center()
 
 	// Here's where the "Info Center" starts...
 	echo '
-	<div class="tile double double-vertical">
-		', sprintf($txt['info_center_title'], $context['forum_name_html_safe']), '
+	<div class="full_width">
+		<div class="tile quadro">
+			', sprintf($txt['info_center_title'], $context['forum_name_html_safe']), '
+			
+			<p class="inline">
+				', $context['common_stats']['boardindex_total_posts'], '', !empty($settings['show_latest_member']) ? ' - '. $txt['latest_member'] . ': <strong> ' . $context['common_stats']['latest_member']['link'] . '</strong>' : '', '<br />
+				', (!empty($context['latest_post']) ? $txt['latest_post'] . ': <strong>&quot;' . $context['latest_post']['link'] . '&quot;</strong>  ( ' . $context['latest_post']['time'] . ' )<br />' : ''), '
+				<a href="', $scripturl, '?action=recent">', $txt['recent_view'], '</a><br />
+			</p>
+			<div class="tile-status">
+				<a href="', $scripturl, '?action=stats" title="', $txt['more_stats'], '"><img class="icon" src="', $settings['images_url'], '/icons/info.png" alt="" />', $txt['forum_stats'], '</a>
+			</div>
+		</div>';
 		
-		<p class="inline">
-			', $context['common_stats']['boardindex_total_posts'], '', !empty($settings['show_latest_member']) ? ' - '. $txt['latest_member'] . ': <strong> ' . $context['common_stats']['latest_member']['link'] . '</strong>' : '', '<br />
-			', (!empty($context['latest_post']) ? $txt['latest_post'] . ': <strong>&quot;' . $context['latest_post']['link'] . '&quot;</strong>  ( ' . $context['latest_post']['time'] . ' )<br />' : ''), '
-			<a href="', $scripturl, '?action=recent">', $txt['recent_view'], '</a>
-		</p>
-	</div>
-	<div class="roundframe" id="info_center">
-		<div id="upshrinkHeaderIC"', empty($options['collapse_header_ic']) ? '' : ' style="display: none;"', '>';
-
-	// This is the "Recent Posts" bar.
+		
+			// This is the "Recent Posts" bar.
 	if (!empty($settings['number_recent_posts']) && (!empty($context['latest_posts']) || !empty($context['latest_post'])))
 	{
 		echo '
@@ -203,6 +206,64 @@ function template_info_center()
 		echo '
 			</div>';
 	}
+	
+	echo '
+		
+		<div class="tile quadro">
+			<div class="tile-status">
+				', $context['show_who'] ? '<a href="' . $scripturl . '?action=who">' : '', '<img class="icon" src="', $settings['images_url'], '/icons/online.png', '" alt="" />', $txt['online_users'], '', $context['show_who'] ? '</a>' : '', '
+			</div>';
+		
+	// "Users online" - in order of activity.
+	echo '
+			<p class="inline">
+				', $context['show_who'] ? '<a href="' . $scripturl . '?action=who">' : '', '<strong>', $txt['online'], ': </strong>', comma_format($context['num_guests']), ' ', $context['num_guests'] == 1 ? $txt['guest'] : $txt['guests'], ', ', comma_format($context['num_users_online']), ' ', $context['num_users_online'] == 1 ? $txt['user'] : $txt['users'];
+
+	// Handle hidden users and buddies.
+	$bracketList = array();
+	if ($context['show_buddies'])
+		$bracketList[] = comma_format($context['num_buddies']) . ' ' . ($context['num_buddies'] == 1 ? $txt['buddy'] : $txt['buddies']);
+	if (!empty($context['num_spiders']))
+		$bracketList[] = comma_format($context['num_spiders']) . ' ' . ($context['num_spiders'] == 1 ? $txt['spider'] : $txt['spiders']);
+	if (!empty($context['num_users_hidden']))
+		$bracketList[] = comma_format($context['num_users_hidden']) . ' ' . ($context['num_spiders'] == 1 ? $txt['hidden'] : $txt['hidden_s']);
+
+	if (!empty($bracketList))
+		echo ' (' . implode(', ', $bracketList) . ')';
+
+	echo $context['show_who'] ? '</a>' : '', '
+
+				&nbsp;-&nbsp;', $txt['most_online_today'], ': <strong>', comma_format($modSettings['mostOnlineToday']), '</strong>&nbsp;-&nbsp;
+				', $txt['most_online_ever'], ': ', comma_format($modSettings['mostOnline']), ' (', timeformat($modSettings['mostDate']), ')<br />';
+
+	// Assuming there ARE users online... each user in users_online has an id, username, name, group, href, and link.
+	if (!empty($context['users_online']))
+	{
+		echo '
+				', sprintf($txt['users_active'], $modSettings['lastActive']), ': ', implode(', ', $context['list_users_online']);
+
+		// Showing membergroups?
+		if (!empty($settings['show_group_key']) && !empty($context['membergroups']))
+			echo '
+				<span class="membergroups">[' . implode(',&nbsp;', $context['membergroups']). ']</span>';
+	}
+
+	echo '
+			</p>
+		</div>';	
+		
+	echo '	
+		<div class="tile">
+			<div class="tile-content icon">
+				<i class="icon-checkmark"></i>
+			</div>
+			<div class="tile-status">
+				Mark Read
+			</div>
+		</div>
+	</div>
+	<div class="roundframe" id="info_center">
+		<div id="upshrinkHeaderIC"', empty($options['collapse_header_ic']) ? '' : ' style="display: none;"', '>';
 
 	// Show information about events, birthdays, and holidays on the calendar.
 	if ($context['show_calendar'])
@@ -253,55 +314,7 @@ function template_info_center()
 	// Show statistical style information...
 	if ($settings['show_stats_index'])
 	{
-		echo '
-			<div class="title_barIC">
-				<h4 class="titlebg">
-					<a href="', $scripturl, '?action=stats" title="', $txt['more_stats'], '"><img class="icon" src="', $settings['images_url'], '/icons/info.png" alt="" />', $txt['forum_stats'], '</a>
-				</h4>
-			</div>';
 	}
-
-	// "Users online" - in order of activity.
-	echo '
-			<div class="title_barIC">
-				<h4 class="titlebg">
-						', $context['show_who'] ? '<a href="' . $scripturl . '?action=who">' : '', '<img class="icon" src="', $settings['images_url'], '/icons/online.png', '" alt="" />', $txt['online_users'], '', $context['show_who'] ? '</a>' : '', '
-					</h4>
-			</div>
-			<p class="inline">
-				', $context['show_who'] ? '<a href="' . $scripturl . '?action=who">' : '', '<strong>', $txt['online'], ': </strong>', comma_format($context['num_guests']), ' ', $context['num_guests'] == 1 ? $txt['guest'] : $txt['guests'], ', ', comma_format($context['num_users_online']), ' ', $context['num_users_online'] == 1 ? $txt['user'] : $txt['users'];
-
-	// Handle hidden users and buddies.
-	$bracketList = array();
-	if ($context['show_buddies'])
-		$bracketList[] = comma_format($context['num_buddies']) . ' ' . ($context['num_buddies'] == 1 ? $txt['buddy'] : $txt['buddies']);
-	if (!empty($context['num_spiders']))
-		$bracketList[] = comma_format($context['num_spiders']) . ' ' . ($context['num_spiders'] == 1 ? $txt['spider'] : $txt['spiders']);
-	if (!empty($context['num_users_hidden']))
-		$bracketList[] = comma_format($context['num_users_hidden']) . ' ' . ($context['num_spiders'] == 1 ? $txt['hidden'] : $txt['hidden_s']);
-
-	if (!empty($bracketList))
-		echo ' (' . implode(', ', $bracketList) . ')';
-
-	echo $context['show_who'] ? '</a>' : '', '
-
-				&nbsp;-&nbsp;', $txt['most_online_today'], ': <strong>', comma_format($modSettings['mostOnlineToday']), '</strong>&nbsp;-&nbsp;
-				', $txt['most_online_ever'], ': ', comma_format($modSettings['mostOnline']), ' (', timeformat($modSettings['mostDate']), ')<br />';
-
-	// Assuming there ARE users online... each user in users_online has an id, username, name, group, href, and link.
-	if (!empty($context['users_online']))
-	{
-		echo '
-				', sprintf($txt['users_active'], $modSettings['lastActive']), ': ', implode(', ', $context['list_users_online']);
-
-		// Showing membergroups?
-		if (!empty($settings['show_group_key']) && !empty($context['membergroups']))
-			echo '
-				<span class="membergroups">[' . implode(',&nbsp;', $context['membergroups']). ']</span>';
-	}
-
-	echo '
-			</p>';
 
 	// If they are logged in, but statistical information is off... show a personal message bar.
 	if ($context['user']['is_logged'] && !$settings['show_stats_index'])
