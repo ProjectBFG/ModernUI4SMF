@@ -105,12 +105,12 @@ function template_main()
 		foreach ($category['boards'] as $board)
 		{
 			echo '
-				<a class="tile double bg-dark" href="', $board['href'], '" name="b', $board['id'], '">
+				<a class="tile double bg-dark" href="', $board['href'], '" id="b', $board['id'], '">
 					<div class="tile-content icon">
-						<img src="', $settings['images_url'], '/cake.png" />
+						<img src="', $settings['images_url'], '/cake.png" alt="',$board['name'],'" />
 					</div>
 					<div class="brand">
-						', $board['name'], '
+						<span class="name">', $board['name'], '</span>
 					</div>
 				</a>';
 		}
@@ -140,20 +140,27 @@ function template_info_center()
 	echo '
 	<div class="full_width">
 		<div class="tile quadro">
-			', sprintf($txt['info_center_title'], $context['forum_name_html_safe']), '
-			
-			<p class="inline">
-				', $context['common_stats']['boardindex_total_posts'], '', !empty($settings['show_latest_member']) ? ' - '. $txt['latest_member'] . ': <strong> ' . $context['common_stats']['latest_member']['link'] . '</strong>' : '', '<br />
-				', (!empty($context['latest_post']) ? $txt['latest_post'] . ': <strong>&quot;' . $context['latest_post']['link'] . '&quot;</strong>  ( ' . $context['latest_post']['time'] . ' )<br />' : ''), '
-				<a href="', $scripturl, '?action=recent">', $txt['recent_view'], '</a><br />
-			</p>
-			<div class="tile-status">
-				<a href="', $scripturl, '?action=stats" title="', $txt['more_stats'], '"><img class="icon" src="', $settings['images_url'], '/icons/info.png" alt="" />', $txt['forum_stats'], '</a>
+			<div class="tile-content">
+				<div class="brand">
+					<span class="name">
+						', sprintf($txt['info_center_title'], $context['forum_name_html_safe']), '
+						
+						<p class="inline">
+							', $context['common_stats']['boardindex_total_posts'], '', !empty($settings['show_latest_member']) ? ' - '. $txt['latest_member'] . ': <strong> ' . $context['common_stats']['latest_member']['link'] . '</strong>' : '', '<br />
+							', (!empty($context['latest_post']) ? $txt['latest_post'] . ': <strong>&quot;' . $context['latest_post']['link'] . '&quot;</strong>  ( ' . $context['latest_post']['time'] . ' )<br />' : ''), '
+							<a href="', $scripturl, '?action=recent">', $txt['recent_view'], '</a><br />
+						</p>
+						<a href="', $scripturl, '?action=stats" title="', $txt['more_stats'], '">', $txt['forum_stats'], '</a>
+							<div class="badge">
+								<img class="icon" src="', $settings['images_url'], '/icons/info.png" alt="" />
+							</div>
+					</span>
+				</div>
 			</div>
 		</div>';
 		
 		
-			// This is the "Recent Posts" bar.
+	// This is the "Recent Posts" bar.
 	if (!empty($settings['number_recent_posts']) && (!empty($context['latest_posts']) || !empty($context['latest_post'])))
 	{
 		echo '
@@ -210,8 +217,10 @@ function template_info_center()
 	echo '
 		
 		<div class="tile quadro">
-			<div class="tile-status">
-				', $context['show_who'] ? '<a href="' . $scripturl . '?action=who">' : '', '<img class="icon" src="', $settings['images_url'], '/icons/online.png', '" alt="" />', $txt['online_users'], '', $context['show_who'] ? '</a>' : '', '
+			<div class="brand">
+				<span class="name">
+					', $context['show_who'] ? '<a href="' . $scripturl . '?action=who">' : '', '<div class="badge"><img class="icon" src="', $settings['images_url'], '/icons/online.png', '" alt="" /></div>', $txt['online_users'], '', $context['show_who'] ? '</a>' : '', '
+				</span>
 			</div>';
 		
 	// "Users online" - in order of activity.
