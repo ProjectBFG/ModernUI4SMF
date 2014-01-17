@@ -86,9 +86,9 @@ function template_html_above()
 
 	// The ?alp21 part of this link is just here to make sure browsers don't cache it wrongly.
 	echo '
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/index.css?alp21" />
 	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/metro-bootstrap.css" />
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/metro-bootstrap-responsive.css" />
-	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/index.css?alp21" />';
+	<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/metro-bootstrap-responsive.css" />';
 
 	// The most efficient way of writing multi themes is to use a master index.css plus variant.css files.
 	if (!empty($context['theme_variant']))
@@ -100,15 +100,12 @@ function template_html_above()
 		echo '
 	<style type="text/css">#wrapper, .frame {width: ', $settings['forum_width'], ';}</style>';
 
-	// Quick and dirty testing of RTL horrors. Remove before production build.
-	//echo '
-	//<link rel="stylesheet" type="text/css" href="', $settings['theme_url'], '/css/rtl.css?alp21" />';
-
 	// load in any css from mods or themes so they can overwrite if wanted
 	template_css();
 
 	// load in any javascript files from mods and themes
-	template_javascript();
+	template_javascript();		echo '
+	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/jquery.widget.min.js"></script>	<script type="text/javascript" src="', $settings['theme_url'], '/scripts/metro.min.js"></script>';
 
 	// RTL languages require an additional stylesheet.
 	if ($context['right_to_left'])
@@ -172,7 +169,7 @@ function template_html_above()
 
 	echo '
 </head>
-<body id="', $context['browser_body_id'], '" class="metro">';
+<body class="metro darkbg">';
 }
 
 function template_body_above()
@@ -189,30 +186,23 @@ function template_body_above()
 	{
 		echo '
 			<div class="element">
-				<a class="dropdown-toggle" href="#">', $context['user']['name'], '</a>
-				 <ul class="dropdown-menu" data-role="dropdown">
-<li><a href="#">Main</a></li>
-<li><a href="#">File Open</a></li>
-<li class="divider"></li>
-<li><a href="#">Print...</a></li>
-<li class="divider"></li>
-<li><a href="#">Exit</a></li>
-</ul>
+				<a class="dropdown-toggle" href="#" id="profile_menu_top">', $context['user']['name'], '</a>
+				<ul id="profile_menu" class="dropdown-menu" data-role="dropdown"></ul>
 			</div>';
 			
 		if ($context['allow_pm'])
 		{
 		echo '
 			<div class="element">
-				<a href="', $scripturl, '?action=pm"', !empty($context['self_pm']) ? ' class="active"' : '', ' id="pm_menu_top">', $txt['pm_short'], !empty($context['user']['unread_messages']) ? ' <span class="amt">' . $context['user']['unread_messages'] . '</span>' : '', '</a>
-				<div id="pm_menu" class="top_menu"></div>
+				<a class="dropdown-toggle" href="', $scripturl, '?action=pm"', !empty($context['self_pm']) ? ' class="active"' : '', ' id="pm_menu_top">', $txt['pm_short'], !empty($context['user']['unread_messages']) ? ' <span class="amt">' . $context['user']['unread_messages'] . '</span>' : '', '</a>
+				<ul id="pm_menu" class="dropdown-menu" data-role="dropdown"></ul>
 			</div>';
 		}
 		
 		echo '
 			<div class="element">
-				<a href="', $scripturl, '?action=alerts"', !empty($context['self_alerts']) ? ' class="active"' : '', ' id="alerts_menu_top">', $txt['alerts'], !empty($context['user']['alerts']) ? ' <span class="amt">' . $context['user']['alerts'] . '</span>' : '', '</a>
-				<div id="alerts_menu" class="top_menu"></div>
+				<a class="dropdown-toggle" href="', $scripturl, '?action=alerts"', !empty($context['self_alerts']) ? ' class="active"' : '', ' id="alerts_menu_top">', $txt['alerts'], !empty($context['user']['alerts']) ? ' <span class="amt">' . $context['user']['alerts'] . '</span>' : '', '</a>
+				<ul id="alerts_menu" class="dropdown-menu" data-role="dropdown"></ul>
 			</div>';
 	}	
 	
@@ -272,12 +262,12 @@ function template_body_above()
 	// Unread things? now I love you button
 	if ($context['user']['is_logged'])
 	echo '
-						<div class="element">
-							<a href="', $scripturl, '?action=unread" title="', $txt['unread_since_visit'], '">', $txt['view_unread_category'], '</a>
-						</div>
-						<div class="element">
-							<a href="', $scripturl, '?action=unreadreplies" title="', $txt['show_unread_replies'], '">', $txt['unread_replies'], '</a>
-						</div>';
+		<div class="element">
+			<a href="', $scripturl, '?action=unread" title="', $txt['unread_since_visit'], '">', $txt['view_unread_category'], '</a>
+		</div>
+		<div class="element">
+			<a href="', $scripturl, '?action=unreadreplies" title="', $txt['show_unread_replies'], '">', $txt['unread_replies'], '</a>
+		</div>';
 						
 	echo '		
 		</nav>
@@ -291,88 +281,35 @@ function template_body_above()
 			</h1>';
 
 	echo '
-			', empty($settings['site_slogan']) ? '<img id="smflogo" src="' . $settings['images_url'] . '/smflogo.png" alt="Simple Machines Forum" title="Simple Machines Forum" />' : '<div id="siteslogan" class="floatright">' . $settings['site_slogan'] . '</div>', '';
+	<div class="floatright">
+		<div class="tile live bg-dark" data-role="live-tile" data-effect="slideUp">
+			<div class="tile-content">
+				<div class="brand">
+					<span class="name">DayZ Mod</span>
+				</div>
+			</div>
+			<div class="tile-content">
+				<div class="brand">
+					<span class="name">ARMA II</span>
+				</div>
+			</div>
+		</div>
+	</div>';
 
 	echo'
 		</div>
-	</div>
-	<div id="wrapper">
-		<div id="upper_section">
-			<div id="inner_section">
-				<div id="inner_wrap">
-					<div class="user">';
-
-	// Otherwise they're a guest - this time ask them to either register or login - lazy bums...
-	if (!empty($context['show_login_bar']))
-	{
-		echo '
-						<script type="text/javascript" src="', $settings['default_theme_url'], '/scripts/sha1.js"></script>
-						<form id="guest_form" action="', $scripturl, '?action=login2;quicklogin" method="post" accept-charset="', $context['character_set'], '" ', empty($context['disable_login_hashing']) ? ' onsubmit="hashLoginPassword(this, \'' . $context['session_id'] . '\', \'' . (!empty($context['login_token']) ? $context['login_token'] : '') . '\');"' : '', '>
-							<input type="text" name="user" size="10" class="input_text" />
-							<input type="password" name="passwrd" size="10" class="input_password" />
-							<select name="cookielength">
-								<option value="60">', $txt['one_hour'], '</option>
-								<option value="1440">', $txt['one_day'], '</option>
-								<option value="10080">', $txt['one_week'], '</option>
-								<option value="43200">', $txt['one_month'], '</option>
-								<option value="-1" selected="selected">', $txt['forever'], '</option>
-							</select>
-							<input type="submit" value="', $txt['login'], '" class="button_submit" />
-							<div>', $txt['quick_login_dec'], '</div>';
-
-		if (!empty($modSettings['enableOpenID']))
-			echo '
-							<br /><input type="text" name="openid_identifier" size="25" class="input_text openid_login" />';
-
-		echo '
-							<input type="hidden" name="hash_passwrd" value="" />
-							<input type="hidden" name="', $context['session_var'], '" value="', $context['session_id'], '" />
-							<input type="hidden" name="', $context['login_token_var'], '" value="', $context['login_token'], '" />
-						</form>';
-	}
-	else
-	{
-		echo '
-						', $context['current_time'];
-	}
-
-	echo'
-					</div>';
-	// Show a random news item? (or you could pick one from news_lines...)
-	if (!empty($settings['enable_news']) && !empty($context['random_news_line']))
-		echo '
-					<div class="news">
-						<h2>', $txt['news'], ': </h2>
-						<p>', $context['random_news_line'], '</p>
-					</div>';
-
-	echo '
-					<hr class="clear" />
-				</div>';
+	</div>';
 
 	// Show the menu here, according to the menu sub template, followed by the navigation tree.
 	template_menu();
 
 	theme_linktree();
 
-	echo '
-			</div>
-		</div>';
-
-	// The main content should go here.
-	echo '
-		<div id="content_section">
-			<div id="main_content_section">';
 }
 
 function template_body_below()
 {
 	global $context, $settings, $options, $scripturl, $txt, $modSettings;
-
-	echo '
-			</div>
-		</div>
-	</div>';
 
 	// Show the XHTML, RSS and WAP2 links, as well as the copyright.
 	// Footer is now full-width by default. Frame inside it will match theme wrapper width automatically.
@@ -477,47 +414,12 @@ function template_menu()
 	foreach ($context['menu_buttons'] as $act => $button)
 	{
 		echo '
-						<li id="button_', $act, '"', !empty($button['sub_buttons']) ? ' class="subsections"' :'', '>
-							<a', $button['active_button'] ? ' class="active"' : '', ' href="', $button['href'], '"', isset($button['target']) ? ' target="' . $button['target'] . '"' : '', '>
-								', $button['title'], '
-							</a>';
-		if (!empty($button['sub_buttons']))
-		{
-			echo '
-							<ul class="dropdown-menu">';
-
-			foreach ($button['sub_buttons'] as $childbutton)
-			{
-				echo '
-								<li', !empty($childbutton['sub_buttons']) ? ' class="subsections"' :'', '>
-									<a href="', $childbutton['href'], '"' , isset($childbutton['target']) ? ' target="' . $childbutton['target'] . '"' : '', '>
-										', $childbutton['title'], '
-									</a>';
-				// 3rd level menus :)
-				if (!empty($childbutton['sub_buttons']))
-				{
-					echo '
-									<ul class="dropdown-menu">';
-
-					foreach ($childbutton['sub_buttons'] as $grandchildbutton)
-						echo '
-										<li>
-											<a href="', $grandchildbutton['href'], '"' , isset($grandchildbutton['target']) ? ' target="' . $grandchildbutton['target'] . '"' : '', '>
-												', $grandchildbutton['title'], '
-											</a>
-										</li>';
-
-					echo '
-									</ul>';
-				}
-
-				echo '
-								</li>';
-			}
-				echo '
-							</ul>';
-		}
-		echo '
+						<li id="button_', $act, '">
+							<a class="tile half bg-dark" href="', $button['href'], '"', isset($button['target']) ? ' target="' . $button['target'] . '"' : '', '>
+								<div class="tile-content icon">
+									<i class="icon-', $button['title'], '"></i>
+								</div>
+							</a>
 						</li>';
 	}
 
